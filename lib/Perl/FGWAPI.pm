@@ -83,6 +83,19 @@ sub edit{
 }
 
 sub get_text{
+    my ($self, $title) = @_;
+    my $response = $ua->post(BASE,{
+        action          => 'query',
+        titles          => $title,
+        prop            => 'revisions',
+        rvprop          => 'content',
+        formatversion   => 2,
+        utf8            => 1,
+        ascii           => 0,
+    });
+
+    my $res_obj = decode_json($response->content);
+    return $res_obj;
 }
 
 sub _dropdead{
