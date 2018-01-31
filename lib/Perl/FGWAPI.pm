@@ -64,6 +64,7 @@ sub edit{
         summary => $summary,
         text    => $text,
         token   => $token,
+        utf8    => 1,
     });
     $res_obj = decode_json($response->content);
     _dropdead("Can't parse response format.", $response) unless exists $res_obj->{edit}->{result};
@@ -77,6 +78,7 @@ sub edit{
         token           => $token,
         wpCaptchaId     => $res_obj->{edit}->{captcha}->{id},
         wpCaptchaWord   => 'FlightGear', #There is some nice anti-spam protection here
+        utf8            => 1,
     });
     $res_obj = decode_json($response->content);
     return $res_obj;
