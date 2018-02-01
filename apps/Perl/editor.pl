@@ -28,7 +28,7 @@ sub main{
                 print "\nAvailable commands: help login read edit quit\n";
                 print "\nSynopsis: help [command]\nPrint help for given command. If no command given, print this help.\n";
             } elsif ($topic eq 'login') {
-                print "\nSynopsis: login [username] [password]\nLogin to MediaWiki using provided credentials.\n";
+                print "\nSynopsis: login [username]\nLogin to MediaWiki using provided username. Command will ask for password and for username (if none provided).\n";
             } elsif ($topic eq 'read') {
                 print "\nSynopsis: read [article_title]\nGet the text of latest revision of given article and open it with 'less'. Will prompt for title if not specified.\n";
             } elsif ($topic eq 'edit') {
@@ -38,8 +38,14 @@ sub main{
             } else {
                 print "\nNo help entry found for '$topic'.\n";
             }
-        } elsif ($input =~ m/^login\s*([^\s]+)\s+([^\s]+)$/g) {
-            my ($login, $password) = ($1, $2);
+        } elsif ($input =~ m/^login\s*([^\s]*)/g) {
+            my ($login) = ($1);
+            while ($login eq '') {
+                $login = _prompt("Enter login");
+            }
+            system('stty', '-echo');
+            my $password = _prompt("Enter password (won't be displayed)");
+            system('stty', 'echo');
             print "\nLogging in...\n";
             my $response = $api->login($login, $password);
             if (exists $response->{login} && exists $response->{login}->{result}) {
